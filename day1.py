@@ -31,8 +31,6 @@ def problem2(data):
         if suma > prev:
             res +=1
         prev = suma
-        print(f'{thresom}, {suma}, {res}')
-
     return res
 
 print(problem2(data))
