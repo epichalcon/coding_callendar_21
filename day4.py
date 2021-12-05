@@ -83,7 +83,27 @@ def problem1(numeros, matrices):
 
 
 def problem2(numeros, matrices):
-    pass
+    x = 0
+    eliminados = 0
+    mapa = crearMapa(matrices)
+    ultimo = []
+    while eliminados < len(matrices):
+        numero = int(numeros[x])
+        for i,matriz in enumerate(matrices):
+            if len(matriz) != 0:
+                for j,row in enumerate(matriz):
+                    for k, col in enumerate(row):
+                        if col == numero:
+                            matrices[i][j][k] = '-'
+                            mapa[str(i) + '-' + str(j)] -= 1
+                            mapa[str(i) + '-' + chr(k + 97)] -= 1
+                            if mapa[str(i) + '-' + str(j)] == 0 or mapa[str(i) + '-' + chr(k + 97)] == 0:
+                                ultimo = matriz.copy()
+                                matrices[i] = []
+                                eliminados += 1
+        x += 1
+    return numero * sumaMatriz(ultimo)
+
 
 numeros, matrices = parser(data)
-print(problem1(numeros, matrices))
+print(problem2(numeros, matrices))
