@@ -1,6 +1,6 @@
 from getdata.getdata import GetData as gd
 from constants.constants import  DIRECTORY
-data = gd.getdata(f"{DIRECTORY}prueva.txt")
+data = gd.getdata(f"{DIRECTORY}day5.txt")
 data = gd.separarPorLineas(data)
 
 def parser(data):
@@ -48,6 +48,49 @@ def problem1(data):
 
     return plano
 
+def problem2(data):
+    plano = makePlano(1000,1000);
+    for elem in data:
+        coords = list(map(int,elem))
+
+        if coords[0] == coords[2]:
+            if coords[1] <= coords[3]:
+                sign = 1
+            else:
+                sign = -1
+            while coords[1] != coords[3]:
+                plano[coords[1]][coords[0]] += 1
+                coords[1] += sign
+            plano[coords[1]][coords[0]] += 1
+
+        elif coords[1] == coords[3]:
+            if coords[0] <= coords[2]:
+                sign = 1
+            else:
+                sign = -1
+
+            while coords[0] != coords[2]:
+                plano[coords[1]][coords[0]] += 1
+                coords[0] += sign
+            plano[coords[1]][coords[0]] += 1
+        
+        else:
+            if coords[1] <= coords[3]:
+                signy = 1
+            else:
+                signy = -1
+            if coords[0] <= coords[2]:
+                signx = 1
+            else:
+                signx = -1
+            while coords[0] != coords[2]:
+                plano[coords[1]][coords[0]] += 1
+                coords[0] += signx
+                coords[1] += signy
+            plano[coords[1]][coords[0]] += 1
+            
+
+    return plano
 
 def sumOverlap(plano):
     count = 0
@@ -60,5 +103,5 @@ def sumOverlap(plano):
 
 
 data = parser(data)
-plano = problem1(data)
+plano = problem2(data)
 print(sumOverlap(plano))
