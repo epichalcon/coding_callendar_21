@@ -18,7 +18,7 @@ def problem1(data,iterations):# muy ineficiente
         i += 1
     return len(data)
 
-def problem2(data, iterations): # complegidad n*m donde n es el numero de iteraciones y m es el tamaño del mapa
+def problem2(data, iterations): # complegidad O(n)
     mapa = {
         0: 0,
         1: 0,
