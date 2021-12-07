@@ -8,12 +8,10 @@ data = gd.getdata(f"{DIRECTORY}day7.txt")
 data = list(map(int, data.split(',')))
 
 def problem1(data):
-    a = np.array(data)
-    median_value = np.percentile(a, 50) 
+    median_value = np.percentile(np.array(data), 50) 
     suma = 0
     for pos in data:
         suma += abs(median_value - pos)
-
     return int(suma)
 
 def cost(data, value):
@@ -25,9 +23,8 @@ def cost(data, value):
 
 
 def problem2(data):
-    a = np.array(data)
-    mean_value = mean(a)
-    return min(cost(data,math.ceil(mean_value)), cost(data,math.floor(mean_value)))
+    mean_value = mean(np.array(data))
+    return int(min(cost(data,math.ceil(mean_value)), cost(data,math.floor(mean_value))))
 
 
 print(problem2(data))
