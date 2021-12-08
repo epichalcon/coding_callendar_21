@@ -1,11 +1,7 @@
 #https://adventofcode.com/2021/day/8
 
-from operator import le
-from numpy.core.fromnumeric import mean
 from getdata.getdata import GetData as gd
 from constants.constants import  DIRECTORY
-import numpy as np
-import math
 data = gd.getdata(f"{DIRECTORY}day8.txt")
 data = gd.separarPorLineas(data)
 
