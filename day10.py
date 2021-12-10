@@ -1,8 +1,9 @@
 #https://adventofcode.com/2021/day/10
 
+import bisect
 from getdata.getdata import GetData as gd
 from constants.constants import  DIRECTORY
-data = gd.getdata(f"{DIRECTORY}prueva.txt")
+data = gd.getdata(f"{DIRECTORY}day10.txt")
 data = gd.separarPorLineas(data)
 
 class CloserNotExpected(Exception):
@@ -46,7 +47,24 @@ def problem1(data) -> int:
 
     return res
 
+def calculatePoints(stack):
+    count = 0
+    stack.reverse()
+    for closer in stack:
+        count *=5
+        count += closer + 1
+    return count
 
+def problem2(data) -> int:
+    points = []
+    for line in data:
+        try:
+            stack = syntaxChecker(line)
+            count = calculatePoints(stack)
+            bisect.insort(points, count)
+        except CloserNotExpected:
+            continue
+    return points[len(points)//2]
+        
 
-
-print(problem1(data))
+print(problem2(data))
