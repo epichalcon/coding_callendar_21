@@ -6,5 +6,7 @@ class GetData():
         return contents
 
     def separarPorLineas(data):
-
         return data.split('\n')
+    
+    def getMatrizDeNumeros(data):
+        return [[*map(int,list(line))] for line in data]
