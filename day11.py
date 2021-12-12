@@ -50,4 +50,13 @@ def problem1(data, iterations):
         it += 1
     return res
 
-print(problem1(data,100))
+def problem2(data):
+    allFlashes = False
+    it = 0
+    while not allFlashes:
+        data = step(data)
+        allFlashes = countFlashes(data) == 100
+        it += 1
+    return it
+
+print(problem2(data))
