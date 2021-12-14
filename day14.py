@@ -30,7 +30,9 @@ def polymerMaker(poly, mapa, iterations):
     return poly
 
 
-def problem(poly, mapa, iterations):
+def problem1(data, iterations):
+    poly = data[0]
+    mapa = parser(data[2:len(data)])
     poly = polymerMaker(poly,mapa, iterations)
     counter = Counter(poly)
     maxResult = counter
@@ -39,7 +41,44 @@ def problem(poly, mapa, iterations):
     minResult = min(minResult, key = minResult.get)
     return counter[maxResult] - counter[minResult]
 
+def increaseMap(mapa, key, amount):
+    if mapa.get(key) is None:
+        mapa[key] = amount
+    else:
+        mapa[key] += amount
 
-poly = data[0]
-mapa = parser(data[2:len(data)])
-print(problem1(poly, mapa,10))
+
+def initializeCounters(poly):
+    pairCount = {}
+    letterCount = {}
+    i = 0
+    while i < len(poly) - 1:
+        increaseMap(letterCount, poly[i], 1)
+        key = poly[i]+poly[i+1]
+        increaseMap(pairCount, key, 1)
+        i += 1
+    increaseMap(letterCount,poly[i],1)
+    
+    return pairCount, letterCount
+
+def problem2(data, iterations):
+    poly = data[0]
+    template = parser(data[2:len(data)])
+    pairCount, letterCount = initializeCounters(poly)
+    for _ in range(iterations):
+        aux = {}
+        for polymer in pairCount:
+            newComp = template[polymer]
+            increaseMap(aux, polymer[0] + newComp, pairCount[polymer])
+            increaseMap(aux, newComp + polymer[1],pairCount[polymer])
+            increaseMap(letterCount, newComp,pairCount[polymer])
+        pairCount = aux.copy()
+    counter = letterCount
+    maxResult = counter
+    maxResult = max(maxResult, key = maxResult.get)
+    minResult = counter
+    minResult = min(minResult, key = minResult.get)
+    return counter[maxResult] - counter[minResult]
+
+
+print(problem2(data,40))
