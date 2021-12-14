@@ -23,7 +23,7 @@ def parser(data):
     return coords, inst, maxx, maxy
 
 def createPaper(coords, maxx, maxy):
-    paper = [['.' for i in range(maxx+1)] for i in range(maxy+1)]
+    paper = [[' ' for i in range(maxx+1)] for i in range(maxy+1)]
     for x, y in coords:
         paper[y][x] = '#'
     return paper
@@ -37,7 +37,7 @@ def sumaMatriz(paper):
                 suma += 1
     return suma
 
-def problem1(coords, inst, maxx, maxy, totalIterations):
+def problem(coords, inst, maxx, maxy, totalIterations):
     paper = createPaper(coords,maxx,maxy)
     it = 0
     if totalIterations == -1:
@@ -69,5 +69,5 @@ def show(paper):
         print(''.join(row))
 
 coords, inst, maxx, maxy = parser(data)
-res, paper = problem1(coords, inst, maxx, maxy, -1)
+res, paper = problem(coords, inst, maxx, maxy, -1)
 show(paper)
