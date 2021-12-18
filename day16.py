@@ -1,7 +1,5 @@
-#https://adventofcode.com/2021/day/15
+#https://adventofcode.com/2021/day/16
 
-from typing import Literal
-import typing
 from getdata.getdata import GetData as gd
 from constants.constants import  DIRECTORY
 
