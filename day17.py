@@ -1,9 +1,5 @@
 #https://adventofcode.com/2021/day/17
 
-from typing import Counter
-from getdata.getdata import GetData as gd
-from constants.constants import  DIRECTORY
-
 PRUEBAX = [20,30]
 PRUEBAY = [-10,-5]
 
