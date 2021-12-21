@@ -1,5 +1,5 @@
 #https://adventofcode.com/2021/day/21
-from typing import overload
+from typing import SupportsComplex, overload
 from getdata.getdata import GetData as gd
 from constants.constants import  DIRECTORY
 from random import randint
@@ -10,26 +10,10 @@ data = gd.separarPorLineas(data)
 class Dice():
     value = 1
     faces:int
+    times_rolled = 0
     
     def __init__(self, faces) -> None:
         self.faces = faces
-
-    def roll(self):
-        res = randint(range(self.faces))
-        return res
-
-    def __str__(self) -> str:
-        return f'{self.faces}, {self.value}'
-
-    def __repr__(self) -> str:
-        return self.__str__()
-
-class Deterministic_dice(Dice):
-    value = 1
-    times_rolled = 0
-
-    def __init__(self, faces) -> None:
-        super().__init__(faces)
 
     def roll(self):
         res = self.value
@@ -39,8 +23,9 @@ class Deterministic_dice(Dice):
             self.value += 1
         self.times_rolled += 1
         return res
+
     def __str__(self) -> str:
-        return super().__str__() + f', {self.times_rolled}'
+        return f'{self.faces}, {self.value}, {self.times_rolled}'
 
     def __repr__(self) -> str:
         return self.__str__()
@@ -52,21 +37,29 @@ class Player():
     has_won = False
     winning_amount = 0
 
-    def __init__(self, name, initial_pos, winnig_amount) -> None:
+    def __init__(self, name, initial_pos, winnig_amount, score = 0) -> None:
         self.name = name
         self.pos = initial_pos
         self.winning_amount = winnig_amount
+        self.score = score
 
     
     def move(self, positions):
-        self.pos += positions
-        if self.pos > 10:
-            self.pos = self.pos%10
-            if self.pos == 0:
-                self.pos = 10
+        self.pos = ( self.pos + positions - 1) % 10 + 1
         self.score += self.pos
         if self.score >= self.winning_amount:
             self.has_won = True
+
+    def undo_move(self, positions):
+        self.score -= self.pos
+        self.pos = ( self.pos - positions - 1) % 10 + 1
+        if self.score < self.winning_amount:
+            self.has_won = False
+
+
+
+    def won(self):
+        return self.has_won or self.score >= self.winning_amount
 
     def __str__(self) -> str:
         return f'{self.name}: pos:{self.pos}, score:{self.score}'
@@ -77,7 +70,7 @@ class Player():
 def problem1(p1_pos, p2_pos):
     p1 = Player('p1',p1_pos, 1000)
     p2 = Player('p2',p2_pos, 1000)
-    dice = Deterministic_dice(100)
+    dice = Dice(100)
     places = 0
     turn = p1
     while not p1.has_won and not p2.has_won:
@@ -101,11 +94,10 @@ def problem1(p1_pos, p2_pos):
 
 @functools.lru_cache(maxsize=None)
 def problem2(turn,p1, p2, s1, s2):
-    players = [p1, p2]
-    scores = [s1, s2]
-    if s1 >= 21:
+    players = [Player('p1', p1, 21, s1),Player('p2', p2, 21, s2)]
+    if players[0].won():
         return [1,0]
-    if s2 >= 21:
+    if players[1].won():
         return [0,1]
     
     play = turn%2
@@ -114,19 +106,16 @@ def problem2(turn,p1, p2, s1, s2):
 
     win_times = [0,0]
 
-    for combination in comb:
-        players[play] = (players[play] + combination[0] - 1)%10 + 1
-        scores[play] += players[play]
-        res = problem2(turn+1,players[0], players[1], scores[0], scores[1])
-        win_times[0] += res[0]*combination[1]
-        win_times[1] += res[1]*combination[1]
-        scores[play] -= players[play]
-        players[play] = (players[play] - combination[0] - 1)%10 + 1
+    for positions, ways in comb:
+        players[play].move(positions)
+        res = problem2(turn+1,players[0].pos, players[1].pos, players[0].score, players[1].score)
+        win_times[0] += res[0]*ways
+        win_times[1] += res[1]*ways
+        players[play].undo_move(positions)
 
     return win_times
 
 player1 = int(data[0][-1])
 player2 = int(data[1][-1])
-p1 = Player('p1', player1, 21)
-p2 = Player('p2', player2, 21)
+print(problem1(player1, player2))
 print(max(problem2(0, player1,player2,0,0)))
