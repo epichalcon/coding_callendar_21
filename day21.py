@@ -100,7 +100,7 @@ def problem2(turn,p1, p2, s1, s2):
     if players[1].won():
         return [0,1]
     
-    pplay = turn%2
+    play = turn%2
 
     comb = [(3,1),(4,3),(5,6),(6,7),(7,6),(8,3),(9,1)]   
 
